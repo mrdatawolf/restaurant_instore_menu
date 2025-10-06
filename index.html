@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Paul's LFNY Pizza Menu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #FFF;
+    color: #222;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    }
+
+/* Rotated content container */
+#rotated-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vh;
+  height: 100vw;
+  transform: rotate(90deg) translateY(-100%);
+  transform-origin: top left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Responsive font scaling */
+body {
+  font-size: calc(1rem + 0.5vw);
+}
+
+/* Optional scaling tiers */
+@media (min-width: 1920px) {
+  body {
+    font-size: 1.8em;
+  }
+}
+
+/* Animation */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Layout and theming */
+#logo {
+  max-width: 300px;
+  margin: 20px auto;
+  display: block;
+}
+
+#header {
+  padding: 20px;
+  box-sizing: border-box;
+  height: 6%;
+  width: 95%;
+  background-color: #f8f8f8;
+  color: #222;
+}
+#restaurant-name {
+    font-size:calc(1rem + 1vw);
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#menu {
+  position: relative; /* This anchors absolutely positioned .page children */
+  padding: 20px;
+  box-sizing: border-box;
+  height: 60%;
+  width: 83%;
+  overflow: scroll;
+}
+
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.page.active {
+  display: flex;
+  opacity: 1;
+  z-index: 1;
+}
+
+
+h1, h2 {
+  color: #E31837;
+  margin: 10px 0;
+}
+
+.item {
+  margin-bottom: 10px;
+}
+
+.item-name {
+  font-weight: bold;
+  color: #222;
+}
+
+.item-desc {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.item-price {
+  font-size: 1em;
+  color: #000;
+}
+
+/* Spinner stays centered in viewport */
+#loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #E31837;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+.page {
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.page.active {
+  display: flex;
+  opacity: 1;
+  z-index: 1;
+}
+
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+  <div id="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+
+  <div id="rotated-content">
+    <div id="header">
+      <div id="restaurant-name">Paul’s Live from New York Pizza</div>
+    </div>
+    <div id="menu"></div>
+  </div>
+    <script>
+    async function fetchMenuData() {
+        try {
+            const res = await fetch('https://www.paulslfnypizza.com/menus/');
+            const html = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const scripts = [...doc.querySelectorAll('script[type="application/ld+json"]')];
+            const menus = [];
+
+            scripts.forEach(script => {
+                try {
+                    const data = JSON.parse(script.textContent);
+                    if (data['@type'] === 'Menu') {
+                        menus.push(data);
+                    }
+                } catch (e) {}
+            });
+            if (menus.length === 0) throw new Error("No menu data found");
+
+            return menus;
+        } catch (err) {
+            console.warn("Live fetch failed, loading local backup:", err);
+            const localScript = document.getElementById('menu-backup');
+            const localData = JSON.parse(localScript.textContent);
+
+            return Array.isArray(localData) ? localData : [localData];
+        }
+    }
+
+    function buildPages(menuData) {
+  const container = document.getElementById('menu');
+  container.innerHTML = ''; // Clear existing content
+
+  menuData.forEach(menu => {
+    const page = document.createElement('div');
+    page.className = 'page';
+
+    const title = document.createElement('h1');
+    title.textContent = menu.name;
+    page.appendChild(title);
+
+    menu.hasMenuSection.forEach(section => {
+      const sectionTitle = document.createElement('h2');
+      sectionTitle.textContent = section.name;
+      page.appendChild(sectionTitle);
+
+      section.hasMenuItem.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+
+        const name = document.createElement('div');
+        name.className = 'item-name';
+        name.textContent = item.name;
+
+        const desc = document.createElement('div');
+        desc.className = 'item-desc';
+        desc.textContent = item.description;
+
+        const price = document.createElement('div');
+        price.className = 'item-price';
+        price.textContent = `$${item.offers.price}`;
+
+        itemDiv.appendChild(name);
+        itemDiv.appendChild(desc);
+        itemDiv.appendChild(price);
+        page.appendChild(itemDiv);
+      });
+    });
+
+    container.appendChild(page);
+  });
+
+  // Activate first page
+  const pages = document.querySelectorAll('.page');
+  let index = 0;
+  pages[index].classList.add('active');
+
+  setInterval(() => {
+    pages.forEach(p => p.classList.remove('active'));
+    pages[index].classList.add('active');
+    index = (index + 1) % pages.length;
+  }, 10000);
+}
+
+
+    //fetchMenuData().then(buildPages);
+    document.addEventListener('DOMContentLoaded', () => {
+        // Start fetch immediately
+        fetchMenuData()
+        .then(data => {
+            buildPages(data);
+        })
+        .catch(err => {
+            console.warn("Fetch failed, using backup:", err);
+            const fallback = document.getElementById('menu-backup');
+            if (fallback) {
+            const localData = JSON.parse(fallback.textContent);
+            buildPages(Array.isArray(localData) ? localData : [localData]);
+            }
+        });
+
+        // Hard-coded spinner timeout
+        setTimeout(() => {
+            document.getElementById('loading-spinner').style.display = 'none';
+        }, 10000); // 10 seconds
+    });
+
+  </script>
+  <script type="application/ld+json" id="menu-backup">
+    [
+  {
+    "@type": "Menu",
+    "name": "Pizza",
+    "hasMenuSection": [
+      {
+        "@type": "MenuSection",
+        "name": "Specialty Pizzas",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "The Bronx",
+            "description": "Pepperoni, Sausage, Mushrooms, Onions",
+            "offers": {
+              "price": "22.00",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "The Brooklyn",
+            "description": "Spinach, Garlic, Ricotta, Mozzarella",
+            "offers": {
+              "price": "21.00",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "The Manhattan",
+            "description": "Canadian Bacon, Pineapple",
+            "offers": {
+              "price": "21.00",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "@type": "Menu",
+    "name": "Calzones",
+    "hasMenuSection": [
+      {
+        "@type": "MenuSection",
+        "name": "Classic Calzones",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Cheese Calzone",
+            "description": "Ricotta, Mozzarella, Parmesan",
+            "offers": {
+              "price": "10.00",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Meat Calzone",
+            "description": "Pepperoni, Sausage, Canadian Bacon",
+            "offers": {
+              "price": "12.00",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "@type": "Menu",
+    "name": "Salads",
+    "hasMenuSection": [
+      {
+        "@type": "MenuSection",
+        "name": "Fresh Salads",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Garden Salad",
+            "description": "Lettuce, Tomato, Cucumber, Carrot",
+            "offers": {
+              "price": "7.00",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Caesar Salad",
+            "description": "Romaine, Parmesan, Croutons, Caesar Dressing",
+            "offers": {
+              "price": "8.00",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "@type": "Menu",
+    "name": "Sides",
+    "hasMenuSection": [
+      {
+        "@type": "MenuSection",
+        "name": "Appetizers",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Garlic Knots",
+            "description": "Fresh dough, garlic butter, parmesan",
+            "offers": {
+              "price": "5.00",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Mozzarella Sticks",
+            "description": "Served with marinara",
+            "offers": {
+              "price": "6.00",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "@type": "Menu",
+    "name": "Drinks",
+    "hasMenuSection": [
+      {
+        "@type": "MenuSection",
+        "name": "Beverages",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Soda",
+            "description": "Coke, Diet Coke, Sprite, Root Beer",
+            "offers": {
+              "price": "2.50",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Bottled Water",
+            "description": "",
+            "offers": {
+              "price": "2.00",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
+
+</script>
+
+</body>
+</html>
