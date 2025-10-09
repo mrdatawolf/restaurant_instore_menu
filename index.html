@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Paul's LFNY Pizza Menu</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<title>Paul's LFNY Pizza Menu</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
     html, body {
     margin: 0;
     padding: 0;
@@ -182,17 +183,16 @@ h1, h2 {
 </style>
 </head>
 <body>
-  <div id="loading-spinner">
-    <div class="spinner"></div>
-  </div>
-
-  <div id="rotated-content">
-    <div id="header">
-      <div id="restaurant-name">Paul’s Live from New York Pizza</div>
-    </div>
-    <div id="menu"></div>
-  </div>
-    <script>
+<div id="loading-spinner">
+<div class="spinner"></div>
+</div>
+<div id="rotated-content">
+<div id="header">
+<div id="restaurant-name">Paul’s Live from New York Pizza</div>
+</div>
+<div id="menu"></div>
+</div>
+<script>
     async function fetchMenuData() {
         try {
             const res = await fetch('https://www.paulslfnypizza.com/menus/');
@@ -253,7 +253,7 @@ h1, h2 {
 
         const price = document.createElement('div');
         price.className = 'item-price';
-        price.textContent = `$${item.offers.price}`;
+        price.textContent = `$${(item.offers && item.offers.price ? item.offers.price : '')}`;
 
         itemDiv.appendChild(name);
         itemDiv.appendChild(desc);
@@ -301,170 +301,331 @@ h1, h2 {
     });
 
   </script>
-  <script type="application/ld+json" id="menu-backup">
-    [
-  {
-    "@type": "Menu",
-    "name": "Pizza",
-    "hasMenuSection": [
-      {
-        "@type": "MenuSection",
-        "name": "Specialty Pizzas",
-        "hasMenuItem": [
-          {
-            "@type": "MenuItem",
-            "name": "The Bronx",
-            "description": "Pepperoni, Sausage, Mushrooms, Onions",
-            "offers": {
-              "price": "22.00",
-              "priceCurrency": "USD"
+<script id="menu-backup" type="application/ld+json">
+[
+    {
+        "@type": "Menu",
+        "name": "Pizza",
+        "hasMenuSection": [
+            {
+                "@type": "MenuSection",
+                "name": "Specialty Pizzas",
+                "hasMenuItem": [
+                    {
+                        "@type": "MenuItem",
+                        "name": "The Bronx",
+                        "description": "Pepperoni, Sausage, Mushrooms, Onions",
+                        "offers": {
+                            "price": "22.00",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "The Brooklyn",
+                        "description": "Spinach, Garlic, Ricotta, Mozzarella",
+                        "offers": {
+                            "price": "21.00",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "The Manhattan",
+                        "description": "Canadian Bacon, Pineapple",
+                        "offers": {
+                            "price": "21.00",
+                            "priceCurrency": "USD"
+                        }
+                    }
+                ]
+            },
+            {
+                "@type": "MenuSection",
+                "name": "Traditional Pizzas",
+                "hasMenuItem": [
+                    {
+                        "@type": "MenuItem",
+                        "name": "14\" Traditional Cheese Pizza",
+                        "description": "",
+                        "image": null,
+                        "offers": {
+                            "price": "19.99",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "18\" Traditional Cheese Pizza",
+                        "description": "",
+                        "image": null,
+                        "offers": {
+                            "price": "29.99",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "XL Traditional Cheese Pizza",
+                        "description": "(for Dine-In Orders Only!!)",
+                        "image": null,
+                        "offers": {
+                            "price": "38.99",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "10\" Gluten-Free Cauliflower Crust Cheese Pizza",
+                        "description": "$2 less than your favorite 12\" gluten-free pizza price",
+                        "image": null,
+                        "offers": {
+                            "price": "12.49",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "12\" Gluten-Free & Dairy-Free Crust Cheese Pizza",
+                        "description": "",
+                        "image": null,
+                        "offers": {
+                            "price": "13.49",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "California Crust (12\") Cheese Pizza",
+                        "description": "$2 more than your favorite 12\" gluten-free pizza price",
+                        "image": null,
+                        "offers": {
+                            "price": "17.99",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "Paul’s Sicilian Crust Cheese Pizza",
+                        "description": "Add $5 to your favorite 18\" specialty pizza price",
+                        "image": null,
+                        "offers": {
+                            "price": "34.99",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "Toppings:",
+                        "description": "",
+                        "image": null,
+                        "offers": [
+                            {
+                                "@type": "Offer",
+                                "price": "1.00",
+                                "priceCurrency": "USD",
+                                "priceSpecification": {
+                                    "@type": "PriceSpecification",
+                                    "maxPrice": "2.50",
+                                    "price": "1.00",
+                                    "description": "10\""
+                                },
+                                "description": "10\""
+                            },
+                            {
+                                "@type": "Offer",
+                                "price": "1.50",
+                                "priceCurrency": "USD",
+                                "priceSpecification": {
+                                    "@type": "PriceSpecification",
+                                    "maxPrice": "3.50",
+                                    "price": "1.50",
+                                    "description": "12\" & CA"
+                                },
+                                "description": "12\" & CA"
+                            },
+                            {
+                                "@type": "Offer",
+                                "price": "2.00",
+                                "priceCurrency": "USD",
+                                "priceSpecification": {
+                                    "@type": "PriceSpecification",
+                                    "maxPrice": "4.00",
+                                    "price": "2.00",
+                                    "description": "14\""
+                                },
+                                "description": "14\""
+                            },
+                            {
+                                "@type": "Offer",
+                                "price": "3.00",
+                                "priceCurrency": "USD",
+                                "priceSpecification": {
+                                    "@type": "PriceSpecification",
+                                    "maxPrice": "5.00",
+                                    "price": "3.00",
+                                    "description": "18\""
+                                },
+                                "description": "18\""
+                            },
+                            {
+                                "@type": "Offer",
+                                "price": "3.50",
+                                "priceCurrency": "USD",
+                                "priceSpecification": {
+                                    "@type": "PriceSpecification",
+                                    "maxPrice": "5.50",
+                                    "price": "3.50",
+                                    "description": "XL"
+                                },
+                                "description": "XL"
+                            },
+                            {
+                                "@type": "Offer",
+                                "price": "3.00",
+                                "priceCurrency": "USD",
+                                "priceSpecification": {
+                                    "@type": "PriceSpecification",
+                                    "maxPrice": "5.00",
+                                    "price": "3.00",
+                                    "description": "Sicilian"
+                                },
+                                "description": "Sicilian"
+                            }
+                        ]
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "",
+                        "description": "Pepperoni, Italian Sausage, Garlic, Roasted Garlic, Tomato, Pesto, Black Olive, Ham, Pineapple, Salami, Mushroom, Broccoli, Bacon, Provolone, Meatball, Yellow Onion, Red Onion, Sauteed Spinach, Fresh Spinach, Jalapeno, Sun-Dried Tomato, Artichoke Hearts, Basil, Pepperoncini, Garlic Butter, Red Bell Peppers, Green Bell Peppers, Extra-Mozzarella, Cheddar, Bleu Cheese Crumble, Feta, Ricotta, Chicken, Anchovy, Pulled Pork, & Seasonal Items",
+                        "image": null
+                    }
+                ]
             }
-          },
-          {
-            "@type": "MenuItem",
-            "name": "The Brooklyn",
-            "description": "Spinach, Garlic, Ricotta, Mozzarella",
-            "offers": {
-              "price": "21.00",
-              "priceCurrency": "USD"
-            }
-          },
-          {
-            "@type": "MenuItem",
-            "name": "The Manhattan",
-            "description": "Canadian Bacon, Pineapple",
-            "offers": {
-              "price": "21.00",
-              "priceCurrency": "USD"
-            }
-          }
         ]
-      }
-    ]
-  },
-  {
-    "@type": "Menu",
-    "name": "Calzones",
-    "hasMenuSection": [
-      {
-        "@type": "MenuSection",
-        "name": "Classic Calzones",
-        "hasMenuItem": [
-          {
-            "@type": "MenuItem",
-            "name": "Cheese Calzone",
-            "description": "Ricotta, Mozzarella, Parmesan",
-            "offers": {
-              "price": "10.00",
-              "priceCurrency": "USD"
+    },
+    {
+        "@type": "Menu",
+        "name": "Calzones",
+        "hasMenuSection": [
+            {
+                "@type": "MenuSection",
+                "name": "Classic Calzones",
+                "hasMenuItem": [
+                    {
+                        "@type": "MenuItem",
+                        "name": "Cheese Calzone",
+                        "description": "Ricotta, Mozzarella, Parmesan",
+                        "offers": {
+                            "price": "10.00",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "Meat Calzone",
+                        "description": "Pepperoni, Sausage, Canadian Bacon",
+                        "offers": {
+                            "price": "12.00",
+                            "priceCurrency": "USD"
+                        }
+                    }
+                ]
             }
-          },
-          {
-            "@type": "MenuItem",
-            "name": "Meat Calzone",
-            "description": "Pepperoni, Sausage, Canadian Bacon",
-            "offers": {
-              "price": "12.00",
-              "priceCurrency": "USD"
-            }
-          }
         ]
-      }
-    ]
-  },
-  {
-    "@type": "Menu",
-    "name": "Salads",
-    "hasMenuSection": [
-      {
-        "@type": "MenuSection",
-        "name": "Fresh Salads",
-        "hasMenuItem": [
-          {
-            "@type": "MenuItem",
-            "name": "Garden Salad",
-            "description": "Lettuce, Tomato, Cucumber, Carrot",
-            "offers": {
-              "price": "7.00",
-              "priceCurrency": "USD"
+    },
+    {
+        "@type": "Menu",
+        "name": "Salads",
+        "hasMenuSection": [
+            {
+                "@type": "MenuSection",
+                "name": "Fresh Salads",
+                "hasMenuItem": [
+                    {
+                        "@type": "MenuItem",
+                        "name": "Garden Salad",
+                        "description": "Lettuce, Tomato, Cucumber, Carrot",
+                        "offers": {
+                            "price": "7.00",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "Caesar Salad",
+                        "description": "Romaine, Parmesan, Croutons, Caesar Dressing",
+                        "offers": {
+                            "price": "8.00",
+                            "priceCurrency": "USD"
+                        }
+                    }
+                ]
             }
-          },
-          {
-            "@type": "MenuItem",
-            "name": "Caesar Salad",
-            "description": "Romaine, Parmesan, Croutons, Caesar Dressing",
-            "offers": {
-              "price": "8.00",
-              "priceCurrency": "USD"
-            }
-          }
         ]
-      }
-    ]
-  },
-  {
-    "@type": "Menu",
-    "name": "Sides",
-    "hasMenuSection": [
-      {
-        "@type": "MenuSection",
-        "name": "Appetizers",
-        "hasMenuItem": [
-          {
-            "@type": "MenuItem",
-            "name": "Garlic Knots",
-            "description": "Fresh dough, garlic butter, parmesan",
-            "offers": {
-              "price": "5.00",
-              "priceCurrency": "USD"
+    },
+    {
+        "@type": "Menu",
+        "name": "Sides",
+        "hasMenuSection": [
+            {
+                "@type": "MenuSection",
+                "name": "Appetizers",
+                "hasMenuItem": [
+                    {
+                        "@type": "MenuItem",
+                        "name": "Garlic Knots",
+                        "description": "Fresh dough, garlic butter, parmesan",
+                        "offers": {
+                            "price": "5.00",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "Mozzarella Sticks",
+                        "description": "Served with marinara",
+                        "offers": {
+                            "price": "6.00",
+                            "priceCurrency": "USD"
+                        }
+                    }
+                ]
             }
-          },
-          {
-            "@type": "MenuItem",
-            "name": "Mozzarella Sticks",
-            "description": "Served with marinara",
-            "offers": {
-              "price": "6.00",
-              "priceCurrency": "USD"
-            }
-          }
         ]
-      }
-    ]
-  },
-  {
-    "@type": "Menu",
-    "name": "Drinks",
-    "hasMenuSection": [
-      {
-        "@type": "MenuSection",
-        "name": "Beverages",
-        "hasMenuItem": [
-          {
-            "@type": "MenuItem",
-            "name": "Soda",
-            "description": "Coke, Diet Coke, Sprite, Root Beer",
-            "offers": {
-              "price": "2.50",
-              "priceCurrency": "USD"
+    },
+    {
+        "@type": "Menu",
+        "name": "Drinks",
+        "hasMenuSection": [
+            {
+                "@type": "MenuSection",
+                "name": "Beverages",
+                "hasMenuItem": [
+                    {
+                        "@type": "MenuItem",
+                        "name": "Soda",
+                        "description": "Coke, Diet Coke, Sprite, Root Beer",
+                        "offers": {
+                            "price": "2.50",
+                            "priceCurrency": "USD"
+                        }
+                    },
+                    {
+                        "@type": "MenuItem",
+                        "name": "Bottled Water",
+                        "description": "",
+                        "offers": {
+                            "price": "2.00",
+                            "priceCurrency": "USD"
+                        }
+                    }
+                ]
             }
-          },
-          {
-            "@type": "MenuItem",
-            "name": "Bottled Water",
-            "description": "",
-            "offers": {
-              "price": "2.00",
-              "priceCurrency": "USD"
-            }
-          }
         ]
-      }
-    ]
-  }
+    }
 ]
 
 </script>
-
 </body>
 </html>
